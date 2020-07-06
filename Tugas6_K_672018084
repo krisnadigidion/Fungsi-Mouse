@@ -1,0 +1,749 @@
+#include<windows.h>
+#include<gl/glut.h>
+
+void init(void);
+void tampil(void);
+void mouse(int button, int state, int x, int y);
+void ukuran(int, int);
+void mouseMotion(int x, int y);
+void keyboard(unsigned char key, int x, int y);
+
+float xrot=0.0f;
+float yrot=0.0f;
+float xdiff=0.0f;
+float ydiff=0.0f;
+bool mouseDown=false;
+int is_depth;
+
+int main(int argc, char **argv){
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowSize(800, 600);
+	glutInitWindowPosition(250, 80);
+	glutCreateWindow("Gidion Fajar Tri K - 672018084");
+	init();
+	glutDisplayFunc(tampil);
+	glutReshapeFunc(ukuran);
+
+	glutMouseFunc(mouse);
+	glutMotionFunc(mouseMotion);
+	
+	glutKeyboardFunc(keyboard);
+
+	glutIdleFunc(tampil);
+	glutMainLoop();
+	return 0;
+}
+
+void init(void){
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glMatrixMode(GL_PROJECTION);
+//    glEnable(GL_LIGHTING);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+    is_depth=1;
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void tampil(void){
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    gluLookAt(0,0,3,0,0,0,0,1,0);
+    glRotatef(xrot, 1, 0, 0);
+    glRotatef(yrot, 0, 1, 0);
+    glPushMatrix();
+
+	//bawah
+    glBegin(GL_POLYGON);
+    glColor3f(2,1,0);
+    glVertex3f(-20, -5, 0);
+    glVertex3f(30, -5, 0);
+    glVertex3f(30, -5, -35);
+    glVertex3f(-20, -5, -35);
+    glEnd();
+
+
+
+    //bata kiri kuning
+    glBegin(GL_POLYGON);
+    glColor3f(1,1,0);
+    glVertex3f(-20, 15, 0);
+    glVertex3f(30, 15, 0);
+    glVertex3f(30, -5, 0);
+    glVertex3f(-20, -5, 0);
+    glEnd();
+    
+    // kursi panjang --------------------------------------------------------------------
+    
+    //alas 
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(16, -1, -1);
+    glVertex3f(20, -1, -1);
+    glVertex3f(20, -1, -12);
+    glVertex3f(16, -1, -12);
+    glEnd();
+    
+    //penyangga kursi kiri 
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(16, 2, -1);
+    glVertex3f(20, 2, -1);
+    glVertex3f(20, -5, -1);
+    glVertex3f(16, -5, -1);
+    glEnd();
+    
+    //penyangga kursi kanan
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(16, 2, -12);
+    glVertex3f(20, 2, -12);
+    glVertex3f(20, -5, -12);
+    glVertex3f(16, -5, -12);
+    glEnd();
+    
+    //kiri merah
+    glBegin(GL_POLYGON);
+    glColor3f(1,0,0);
+    glVertex3f(15, 15, 0);
+    glVertex3f(15, 15, -20);
+    glVertex3f(15, -5, -20);
+    glVertex3f(15, -5, 0);
+    glEnd();
+
+
+
+    //kanan
+    glBegin(GL_POLYGON);
+    glColor3f(1,0,1);
+    glVertex2f(7, 15);
+    glVertex2f(7, 15);
+    glVertex2f(7, -5);
+    glVertex2f(7, -5);
+    glEnd();
+
+
+    //bata tengah depan ijo
+    glBegin(GL_POLYGON);
+    glColor3f(0,0.5,0);
+    glVertex3f(15, 20, -20);
+    glVertex3f(30, 15, -20);
+    glVertex3f(30, -5, -20);
+    glVertex3f(15, -5, -20);
+    glEnd();
+
+
+    //bata  depan biru
+    glBegin(GL_POLYGON);
+    glColor3f(0,1,1);
+    glVertex3f(30, 15, -20);
+    glVertex3f(30, 15, -35);
+    glVertex3f(30, -5, -35);
+    glVertex3f(30, -5, -20);
+    glEnd();
+
+	//pintu depan
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,0,0);
+    glVertex3f(30.2, 8, -25);
+    glVertex3f(30.2, 8, -30);
+    glVertex3f(30.2, -5, -30);
+    glVertex3f(30.2, -5, -25);
+    glEnd();
+
+    //samping kanan depan ijo
+    glBegin(GL_POLYGON);
+    glColor3f(0.5,1,0);
+    glVertex3f(15, 20, -35);
+    glVertex3f(30, 15, -35);
+    glVertex3f(30, -5, -35);
+    glVertex3f(15, -5, -35);
+    glEnd();
+    
+    
+    
+// rak sepatu ----------------------------------------------
+	
+	//rak sepatu
+    glBegin(GL_POLYGON);
+    glColor3f(0.5,0,0);
+    glVertex3f(16, 7, -33);
+    glVertex3f(28, 7, -33);
+    glVertex3f(28, -5, -33);
+    glVertex3f(16, -5, -33);
+    glEnd();
+    
+    
+    //susunan rak 1 paling bawah
+    glBegin(GL_POLYGON);
+    glColor3f(9,1,3);
+    glVertex3f(16, -4, -30);
+    glVertex3f(28, -4, -30);
+    glVertex3f(28, -4, -33);
+    glVertex3f(16, -4, -33);
+    glEnd();
+    
+    //susunan rak 2
+    glBegin(GL_POLYGON);
+    glColor3f(9,1,3);
+    glVertex3f(16, -2, -30);
+    glVertex3f(28, -2, -30);
+    glVertex3f(28, -2, -33);
+    glVertex3f(16, -2, -33);
+    glEnd();
+    
+    //susunan rak 3
+    glBegin(GL_POLYGON);
+    glColor3f(9,1,3);
+    glVertex3f(16, 0, -30);
+    glVertex3f(28, 0, -30);
+    glVertex3f(28, 0, -33);
+    glVertex3f(16, 0, -33);
+    glEnd();
+    
+    //susunan rak 4
+    glBegin(GL_POLYGON);
+    glColor3f(9,1,3);
+    glVertex3f(16, 2, -30);
+    glVertex3f(28, 2, -30);
+    glVertex3f(28, 2, -33);
+    glVertex3f(16, 2, -33);
+    glEnd();
+    
+    
+    //susunan rak 5
+    glBegin(GL_POLYGON);
+    glColor3f(9,1,3);
+    glVertex3f(16, 4, -30);
+    glVertex3f(28, 4, -30);
+    glVertex3f(28, 4, -33);
+    glVertex3f(16, 4, -33);
+    glEnd();
+    
+    
+    //susunan rak 6
+    glBegin(GL_POLYGON);
+    glColor3f(9,1,3);
+    glVertex3f(16, 7, -30);
+    glVertex3f(28, 7, -30);
+    glVertex3f(28, 7, -33);
+    glVertex3f(16, 7, -33);
+    glEnd();
+    
+    //tutup rak samping 1
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(28, 7, -29);
+    glVertex3f(28, 7, -33);
+    glVertex3f(28, -5, -33);
+    glVertex3f(28, -5, -29);
+    glEnd();
+    
+    
+    //tutup rak samping 2
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(16, 7, -29);
+    glVertex3f(16, 7, -33);
+    glVertex3f(16, -5, -33);
+    glVertex3f(16, -5, -29);
+    glEnd();
+    
+
+    //samping kanan belakang pink
+    glBegin(GL_POLYGON);
+    glColor3f(1,0,0.5);
+    glVertex3f(-20, 25, -35);
+    glVertex3f(-2, 35, -35);
+    glVertex3f(15, 25, -35);
+    glVertex3f(15, -5, -35);
+    glVertex3f(-20, -5, -35);
+    glEnd();
+    
+   
+    
+// lemari -----------------------------------------------------------------    
+    
+    //lemari
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0.5);
+    glVertex3f(-8.0, 15, -34);
+    glVertex3f(9.0, 15, -34);
+    glVertex3f(9.0, -5, -34);
+    glVertex3f(-8.0, -5, -34);
+    glEnd();
+    
+    //pintu kiri lemari
+    glBegin(GL_POLYGON);
+    glColor3f(0,8.0,0.0);
+    glVertex3f(-0, 14, -30);
+    glVertex3f(9, 14, -30);
+    glVertex3f(9, -4, -30);
+    glVertex3f(-0, -4, -30);
+    glEnd();
+    
+    //pintu kanan lemari
+    glBegin(GL_POLYGON);
+    glColor3f(0,8.0,0.0);
+    glVertex3f(-8, 14, -30);
+    glVertex3f(0, 14, -30);
+    glVertex3f(0, -4, -30);
+    glVertex3f(-8, -4, -30);
+    glEnd();
+    
+    //pintu kiri lemari gagangnya
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.0,0.0);
+    glVertex3f(-1.0, 7, -29);
+    glVertex3f(-2.0, 7, -29);
+    glVertex3f(-2.0, 4, -29);
+    glVertex3f(-1.0, 4, -29);
+    glEnd();
+    
+    //pintu kanan lemari gagangnya
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.0,0.0);
+    glVertex3f(1.0, 7, -29);
+    glVertex3f(2.0, 7, -29);
+    glVertex3f(2.0, 4, -29);
+    glVertex3f(1.0, 4, -29);
+    glEnd();
+    
+    
+    //dasar lemari
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0.5);
+    glVertex3f(-8, -4, -29);
+    glVertex3f(9, -4, -29);
+    glVertex3f(9, -4, -34);
+    glVertex3f(-8, -4, -34);
+    glEnd();
+    
+    //tutup atas lemari
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0.5);
+    glVertex3f(-8, 14, -29);
+    glVertex3f(9, 14, -29);
+    glVertex3f(9, 14, -34);
+    glVertex3f(-8, 14, -34);
+    glEnd();
+    
+    //samping lemari kiri
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0.5);
+    glVertex3f(-8.0, 15, -29);
+    glVertex3f(-8.0, 15, -35);
+    glVertex3f(-8.0, -5, -35);
+    glVertex3f(-8.0, -5, -29);
+    glEnd();
+    
+    //samping lemari kanan
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0.5);
+    glVertex3f(9.0, 15, -29);
+    glVertex3f(9.0, 15, -35);
+    glVertex3f(9.0, -5, -35);
+    glVertex3f(9.0, -5, -29);
+    glEnd();
+    
+    //sekat lemari tengah
+    glBegin(GL_POLYGON);
+    glColor3f(0,0.0,0.0);
+    glVertex3f(-0.0, 14, -29);
+    glVertex3f(-0.0, 14, -34);
+    glVertex3f(-0.0, -4, -34);
+    glVertex3f(-0.0, -4, -29);
+    glEnd();
+
+//mejo -------------------------------------------------------------------------------------------  
+    
+    
+    //meja dasar
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(-19.0, 5, -25);
+    glVertex3f(-10.0, 5, -25);
+    glVertex3f(-10.0, 5, -34);
+    glVertex3f(-19.0, 5, -34);
+    glEnd();
+    
+    //penyangga meja 1 dalam
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0);
+    glVertex3f(-19.0, 5, -33);
+    glVertex3f(-19.0, 5, -34);
+    glVertex3f(-19.0, -5, -34);
+    glVertex3f(-19.0, -5, -33);
+    glEnd();
+    
+    //penyangga meja 2 dalam
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0);
+    glVertex3f(-19.0, 5, -25);
+    glVertex3f(-19.0, 5, -26);
+    glVertex3f(-19.0, -5, -26);
+    glVertex3f(-19.0, -5, -25);
+    glEnd();
+    
+    //penyangga meja 3 luar
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0);
+    glVertex3f(-10.0, 5, -33);
+    glVertex3f(-10.0, 5, -34);
+    glVertex3f(-10.0, -5, -34);
+    glVertex3f(-10.0, -5, -33);
+    glEnd();
+    
+    
+    //penyangga meja 4 dalam
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0);
+    glVertex3f(-10.0, 5, -25);
+    glVertex3f(-10.0, 5, -26);
+    glVertex3f(-10.0, -5, -26);
+    glVertex3f(-10.0, -5, -25);
+    glEnd();
+    
+   
+    
+// kursi ------------------------------------------------------
+	
+	//kursi 
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(-12.0, 1, -22);
+    glVertex3f(-17.0, 1, -22);
+    glVertex3f(-17.0, 1, -26);
+    glVertex3f(-12.0, 1, -26);
+    glEnd();
+    
+    //penyangga kursi depan kanan
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(-12.0, 1, -25);
+    glVertex3f(-12.0, 1, -26);
+    glVertex3f(-12.0, -5, -26);
+    glVertex3f(-12.0, -5, -25);
+    glEnd();
+    
+    
+     //penyangga kursi depan kiri
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(-17.0, 1, -25);
+    glVertex3f(-17.0, 1, -26);
+    glVertex3f(-17.0, -5, -26);
+    glVertex3f(-17.0, -5, -25);
+    glEnd();
+    
+   //penyangga kursi belakang kiri
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(-17.0, 5, -22);
+    glVertex3f(-17.0, 5, -23);
+    glVertex3f(-17.0, -5, -23);
+    glVertex3f(-17.0, -5, -22);
+    glEnd();
+    
+    
+    //penyangga kursi belakang kanan
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(-12.0, 5, -22);
+    glVertex3f(-12.0, 5, -23);
+    glVertex3f(-12.0, -5, -23);
+    glVertex3f(-12.0, -5, -22);
+    glEnd();
+    
+    
+    //sendenan kursi
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(-12.0, 5, -22.5);
+    glVertex3f(-17.0, 5, -22.5);
+    glVertex3f(-17.0, 3, -22.5);
+    glVertex3f(-12.0, 3, -22.5);
+    glEnd();
+       
+
+    //tengah dalam rumah ijo besar
+    glBegin(GL_POLYGON);
+    glColor3f(0,1,0 );
+    glVertex3f(-20, 25, -20);
+    glVertex3f(-2, 35, -20);
+    glVertex3f(15, 25, -20);
+    glVertex3f(15, -5, -20);
+    glVertex3f(-20, -5, -20);
+    glEnd();
+
+
+    //belakang pink muda kecil
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,1);
+    glVertex3f(-20, 25, -20);
+    glVertex3f(-20, 25, -35);
+    glVertex3f(-20, -5, -35);
+    glVertex3f(-20, -5, -20);
+    glEnd();
+
+    //bata tengah depan putih
+    glBegin(GL_POLYGON);
+    glColor3f(1,1,1);
+    glVertex3f(15, 25, -20);
+    glVertex3f(15, 25, -35);
+    glVertex3f(15, -5, -35);
+    glVertex3f(15, -5, -20);
+    glEnd();
+
+
+     //belakang kiri ijo muda
+    glBegin(GL_POLYGON);
+    glColor3f(0,1,0);
+    glVertex3f(-20, 15, 0);
+    glVertex3f(-20, 15, -20);
+    glVertex3f(-20, -5, -20);
+    glVertex3f(-20, -5, 0);
+    glEnd();
+
+    //depan kanan 1
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0);
+    glVertex3f(-20, 15, 0);
+    glVertex3f(-2, 30, 0);
+    glVertex3f(15, 15, 0);
+    glEnd();
+
+    //depan kanan 2
+    glBegin(GL_POLYGON);
+    glColor3f(1,0.5,0);
+    glVertex3f(-20, 15, -20);
+    glVertex3f(-2, 30, -20);
+    glVertex3f(15, 15, -20);
+    glEnd();
+    
+    // ranjang  ----------------------------------------
+
+    //ranjang putih
+    glBegin(GL_POLYGON);
+    glColor3f(0,1,0);
+    glVertex3f(-19, 0, -1);
+    glVertex3f(10, 0, -1);
+    glVertex3f(10, 0, -15);
+    glVertex3f(-19, 0, -15);
+    glEnd();
+    
+    
+    //ranjang putih bawah
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,0);
+    glVertex3f(-19, -4, -1);
+    glVertex3f(10, -4, -1);
+    glVertex3f(10, -4, -15);
+    glVertex3f(-19, -4, -15);
+    glEnd();
+   
+     //penyangga ranjang atas ungu
+    glBegin(GL_POLYGON);
+    glColor3f(2,0,0);
+    glVertex3f(-19, 5, -1);
+    glVertex3f(-19, 5, -15);
+    glVertex3f(-19, -5, -15);
+    glVertex3f(-19, -5, -1);
+    glEnd();
+   
+     //penyangga ranjang bawah
+    glBegin(GL_POLYGON);
+    glColor3f(2,0,0);
+    glVertex3f(10, 0, -1);
+    glVertex3f(10, 0, -15);
+    glVertex3f(10, -5, -15);
+    glVertex3f(10, -5, -1);
+    glEnd();
+    
+        //penyannga kanan 
+    glBegin(GL_POLYGON);
+    glColor3f(2,0,0);
+    glVertex3f(-19, 0, -15);
+    glVertex3f(10, 0, -15);
+    glVertex3f(10, -5, -15);
+    glVertex3f(-19, -5, -15);
+    glEnd();
+    
+        //penyannga kiri
+    glBegin(GL_POLYGON);
+    glColor3f(2,0,0);
+    glVertex3f(-19, 0, -1);
+    glVertex3f(10, 0, -1);
+    glVertex3f(10, -5, -1);
+    glVertex3f(-19, -5, -1);
+    glEnd();
+    
+    //bantal kiri
+    glBegin(GL_POLYGON);
+    glColor3f(2,0,0);
+    glVertex3f(-18, 1, -2);
+    glVertex3f(-15, 1, -2);
+    glVertex3f(-15, 1, -7);
+    glVertex3f(-18, 1, -7);
+    glEnd();
+    
+    //bantal kanan
+    glBegin(GL_POLYGON);
+    glColor3f(2,0,0);
+    glVertex3f(-18, 1, -9);
+    glVertex3f(-15, 1, -9);
+    glVertex3f(-15, 1, -14);
+    glVertex3f(-18, 1, -14);
+    glEnd();
+
+// genteng  --------------------------------------------
+
+	//genteng belakang samping kiri
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,0,0);
+    glVertex3f(18, 23, -38);
+    glVertex3f(-2, 35, -38);
+    glVertex3f(-2, 35, -17);
+    glVertex3f(18, 23, -17);
+    glEnd();
+
+    //genteng belakang samping kanan
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,0,0);
+    glVertex3f(-23, 23, -38);
+    glVertex3f(-2, 35, -38);
+    glVertex3f(-2, 35, -17);
+    glVertex3f(-23, 23, -17);
+    glEnd();
+    
+    
+    //genteng kanan belakang
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,0,0 );
+    glVertex3f(-23, 13, -20);
+    glVertex3f(-2, 30, -20);
+    glVertex3f(-2, 30, 2);
+    glVertex3f(-23, 13, 2);
+    glEnd();
+
+   //genteng kanan depan
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,0,0 );
+    glVertex3f(15, 15, -20);
+    glVertex3f(-2, 30, -20);
+    glVertex3f(-2, 30, 2);
+    glVertex3f(15, 15, 2);
+    glEnd();
+    
+    
+     //genteng depan
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,0,0);
+    glVertex3f(33, 15, -38);
+    glVertex3f(15, 20, -38);
+    glVertex3f(15, 20, -17);
+    glVertex3f(33, 15, -17);
+    glEnd();
+    
+    // jendela  dan pintu ---------------------
+    
+    //pintu kanan dalam
+    glBegin(GL_POLYGON);
+    glColor3f(1,0,1);
+    glVertex3f(15.2, 8, -13);
+    glVertex3f(15.2, 8, -19);
+    glVertex3f(15.2, -5, -19);
+    glVertex3f(15.2, -5, -13);
+    glEnd();
+    
+    //jendela 1 kanan dalam
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(15.2, 10, -8);
+    glVertex3f(15.2, 10, -12);
+    glVertex3f(15.2, -0, -12);
+    glVertex3f(15.2, -0, -8);
+    glEnd();
+    
+    //jendela 2 kanan dalam
+    glBegin(GL_POLYGON);
+    glColor3f(0,0,1);
+    glVertex3f(15.2, 10, -3);
+    glVertex3f(15.2, 10, -7);
+    glVertex3f(15.2, -0, -7);
+    glVertex3f(15.2, -0, -3);
+    glEnd();
+    
+    
+    //jendela depan
+    glBegin(GL_POLYGON);
+    glColor3f(0.1,1,0);
+    glVertex3f(30.2, 10, -21);
+    glVertex3f(30.2, 10, -24);
+    glVertex3f(30.2, -0, -24);
+    glVertex3f(30.2, -0, -21);
+    glEnd(); 
+   
+    glPopMatrix();
+    glutSwapBuffers();
+}
+
+void idle(){
+    if(!mouseDown){
+        xrot += 0.3f;
+        yrot += 0.4f;
+    }
+    glutPostRedisplay();
+}
+
+void mouse(int button, int state, int x, int y){
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+        mouseDown = true;
+        xdiff = x - yrot;
+        ydiff = -y + xrot;
+    }
+    else
+    mouseDown = false;
+}
+
+void mouseMotion(int x, int y){
+    if(mouseDown){
+        yrot = x - xdiff;
+        xrot = y + ydiff;
+
+        glutPostRedisplay();
+    }
+}
+
+
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case '5':
+        if (is_depth)
+        {
+            is_depth = 0;
+            glDisable(GL_DEPTH_TEST);
+        }
+        else
+        {
+            is_depth = 1;
+            glEnable(GL_DEPTH_TEST);
+        }
+	}
+	tampil();
+}
+	
+
+
+void ukuran(int lebar, int tinggi){
+    if(tinggi == 0) tinggi = 1;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(50, lebar / tinggi, 5, 500);
+    glTranslatef(0, -5, -150);
+    glMatrixMode(GL_MODELVIEW);
+}
